@@ -112,8 +112,10 @@ button { font-family: inherit; cursor: pointer; }
 /* ------------------------------------------------------------
    Фоновое видео на весь сайт: зафиксировано, контент едет поверх
    ------------------------------------------------------------ */
-.site-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: var(--bg); }
+.site-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: var(--bg); }
 .site-bg__video { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Весь контент — слоем поверх фонового видео */
+header, section, footer { position: relative; z-index: 1; }
 .site-bg__overlay {
   position: absolute; inset: 0;
   background:
