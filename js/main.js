@@ -11,8 +11,8 @@
   var yearEl = document.querySelector('[data-year]');
   if (yearEl) { yearEl.textContent = new Date().getFullYear(); }
 
-  /* ---------- Фоновое видео hero ---------- */
-  var heroVideo = document.querySelector('[data-hero-video]');
+  /* ---------- Фоновое видео на весь сайт ---------- */
+  var heroVideo = document.querySelector('[data-bg-video]');
   if (heroVideo) {
     if (reduceMotion) {
       // Уважаем настройку «уменьшить движение» — оставляем статичный постер

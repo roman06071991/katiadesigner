@@ -12,6 +12,16 @@
 </head>
 <body>
 
+  <!-- Фоновое видео на весь сайт -->
+  <div class="site-bg" aria-hidden="true">
+    <video class="site-bg__video" autoplay muted loop playsinline preload="auto"
+           poster="images/hero-living.png" data-bg-video>
+      <source src="video/hero.mp4" type="video/mp4" />
+      <img src="images/hero-living.png" alt="" />
+    </video>
+    <div class="site-bg__overlay"></div>
+  </div>
+
   <!-- Кастомный курсор -->
   <div class="cursor" data-cursor aria-hidden="true"></div>
   <div class="cursor-dot" data-cursor-dot aria-hidden="true"></div>
@@ -41,13 +51,6 @@
 
   <!-- 1. ПЕРВЫЙ ЭКРАН -->
   <section class="hero" id="hero">
-    <div class="hero__bg" data-parallax>
-      <video class="hero__video" autoplay muted loop playsinline preload="auto"
-             poster="images/hero-living.png" data-hero-video>
-        <source src="video/hero.mp4" type="video/mp4" />
-        <img src="images/hero-living.png" alt="Фотореалистичная 3D-визуализация светлой гостиной" />
-      </video>
-    </div>
     <div class="hero__overlay"></div>
     <div class="container hero__content">
       <p class="hero__eyebrow reveal">Kateryna Hnida — 3D Interior Visualization</p>

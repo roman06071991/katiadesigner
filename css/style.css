@@ -92,11 +92,11 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; background: var(--bg); }
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: transparent;
   color: var(--text);
   font-family: var(--sans);
   font-weight: 200;
@@ -109,6 +109,17 @@ img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; }
 
+/* ------------------------------------------------------------
+   Фоновое видео на весь сайт: зафиксировано, контент едет поверх
+   ------------------------------------------------------------ */
+.site-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: var(--bg); }
+.site-bg__video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.site-bg__overlay {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(14,14,15,0.35) 0%, rgba(14,14,15,0.62) 55%, rgba(14,14,15,0.8) 100%);
+}
+
 .container {
   width: 100%;
   max-width: var(--container);
@@ -116,7 +127,13 @@ button { font-family: inherit; cursor: pointer; }
   padding-inline: var(--pad);
 }
 
-.section { padding-block: clamp(72px, 11vw, 150px); }
+.section {
+  padding-block: clamp(72px, 11vw, 150px);
+  position: relative;
+  background: rgba(14,14,15,0.72);
+  backdrop-filter: blur(4px) saturate(105%);
+  -webkit-backdrop-filter: blur(4px) saturate(105%);
+}
 
 /* ---------- Типографика ---------- */
 .eyebrow {
@@ -214,9 +231,6 @@ button { font-family: inherit; cursor: pointer; }
    1. ПЕРВЫЙ ЭКРАН
    ============================================================ */
 .hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; overflow: hidden; }
-.hero__bg { position: absolute; inset: -8% 0; z-index: 0; will-change: transform; }
-.hero__bg img,
-.hero__bg video { width: 100%; height: 116%; object-fit: cover; display: block; }
 .hero__overlay {
   position: absolute; inset: 0; z-index: 1;
   background:
@@ -268,7 +282,7 @@ button { font-family: inherit; cursor: pointer; }
 /* ============================================================
    3. ПОРТФОЛИО
    ============================================================ */
-.portfolio { background: var(--bg-2); }
+.portfolio { background: rgba(20,20,22,0.56); }
 .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
 .filter {
   background: none; border: 1px solid var(--line); color: var(--text-soft);
@@ -336,7 +350,7 @@ button { font-family: inherit; cursor: pointer; }
 /* ============================================================
    5. ПАКЕТЫ И СТОИМОСТЬ
    ============================================================ */
-.pricing { background: var(--bg-2); }
+.pricing { background: rgba(20,20,22,0.56); }
 
 /* ---- Переключатель периода (порт shadcn Switch) ---- */
 .billing-toggle { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 56px; flex-wrap: wrap; }
@@ -418,7 +432,7 @@ button { font-family: inherit; cursor: pointer; }
 /* ============================================================
    7. ПРЕИМУЩЕСТВА
    ============================================================ */
-.advantages { background: var(--bg-2); }
+.advantages { background: rgba(20,20,22,0.56); }
 .adv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .adv {
   border: 1px solid var(--line); border-radius: 3px; padding: 34px 30px; min-height: 150px;
@@ -489,7 +503,7 @@ button { font-family: inherit; cursor: pointer; }
 /* ============================================================
    9. ФОРМА
    ============================================================ */
-.contact { background: var(--bg-2); }
+.contact { background: rgba(20,20,22,0.56); }
 .contact__grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(36px, 6vw, 80px); align-items: start; }
 .contact__lead { color: var(--text-soft); margin-top: 22px; max-width: 40ch; }
 .form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 22px; }
@@ -534,7 +548,7 @@ button { font-family: inherit; cursor: pointer; }
 /* ============================================================
    ПОДВАЛ
    ============================================================ */
-.footer { border-top: 1px solid var(--line); padding-block: 54px 34px; background: var(--bg); }
+.footer { border-top: 1px solid var(--line); padding-block: 54px 34px; background: rgba(14,14,15,0.82); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); position: relative; }
 .footer__inner { display: flex; flex-wrap: wrap; gap: 28px; justify-content: space-between; align-items: center; padding-bottom: 30px; border-bottom: 1px solid var(--line-soft); }
 .footer__name { font-family: var(--serif); font-size: 1.3rem; letter-spacing: 0.14em; text-transform: uppercase; display: block; }
 .footer__sub { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-top: 6px; display: block; }
