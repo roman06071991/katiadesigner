@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kateryna Hnida — Фотореалистичная 3D-визуализация интерьеров</title>
+  <meta name="description" content="Фотореалистичная 3D-визуализация жилых и коммерческих интерьеров. 3ds Max · Corona Renderer. Помогаю увидеть пространство до его реализации." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poiret+One&family=Raleway:wght@100;200;300;400;500;600&family=Manrope:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Кастомный курсор -->
+  <div class="cursor" data-cursor aria-hidden="true"></div>
+  <div class="cursor-dot" data-cursor-dot aria-hidden="true"></div>
+
+  <!-- Глобальная подсветка за курсором (на весь сайт) -->
+  <div class="page-spotlight" data-page-spotlight aria-hidden="true"></div>
+
+  <!-- ШАПКА -->
+  <header class="header" data-header>
+    <div class="container header__inner">
+      <a href="#hero" class="brand" data-scroll>
+        <span class="brand__name">Kateryna Hnida</span>
+        <span class="brand__sub">3D-визуализация интерьеров</span>
+      </a>
+      <nav class="nav" data-nav>
+        <a href="#portfolio" class="nav__link" data-scroll>Проекты</a>
+        <a href="#about" class="nav__link" data-scroll>Обо мне</a>
+        <a href="#services" class="nav__link" data-scroll>Услуги</a>
+        <a href="#pricing" class="nav__link" data-scroll>Цены</a>
+        <a href="#contact" class="nav__link" data-scroll>Контакты</a>
+      </nav>
+      <button class="burger" data-burger aria-label="Меню" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 1. ПЕРВЫЙ ЭКРАН -->
+  <section class="hero" id="hero">
+    <div class="hero__bg" data-parallax>
+      <img src="images/hero-living.png" alt="Фотореалистичная 3D-визуализация светлой гостиной" />
+    </div>
+    <div class="hero__overlay"></div>
+    <div class="container hero__content">
+      <p class="hero__eyebrow reveal">Kateryna Hnida — 3D Interior Visualization</p>
+      <h1 class="hero__title reveal">Фотореалистичная<br />3D-визуализация интерьеров</h1>
+      <p class="hero__subtitle reveal">Создаю атмосферные и детализированные изображения, которые помогают увидеть пространство до его реализации.</p>
+      <div class="hero__actions reveal">
+        <a href="#portfolio" class="btn btn--primary" data-scroll>Посмотреть проекты</a>
+        <a href="#contact" class="btn btn--ghost" data-scroll>Обсудить проект</a>
+      </div>
+    </div>
+    <div class="hero__caption container">
+      <span>Интерьеры жилых и коммерческих пространств</span>
+      <span class="hero__caption-soft">3ds&nbsp;Max · Corona&nbsp;Renderer</span>
+    </div>
+  </section>
+
+  <!-- 2. ОБО МНЕ -->
+  <section class="about section" id="about">
+    <div class="container about__grid">
+      <div class="about__media reveal" role="img" aria-label="Фрагмент фотореалистичной визуализации спальни"></div>
+      <div class="about__text">
+        <p class="eyebrow reveal">Обо мне</p>
+        <h2 class="section__title reveal">Передаю характер<br />будущего интерьера</h2>
+        <p class="about__lead reveal">Я создаю фотореалистичные визуализации интерьеров, уделяя особое внимание свету, материалам, композиции и атмосфере пространства.</p>
+        <p class="about__body reveal">Моя задача — не просто показать мебель и отделку, а передать характер будущего интерьера и помочь клиенту увидеть конечный результат ещё до начала работ.</p>
+        <p class="about__sign reveal">Kateryna&nbsp;Hnida<span>3D-визуализатор интерьеров</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. ПОРТФОЛИО -->
+  <section class="portfolio section" id="portfolio">
+    <div class="container">
+      <div class="section__head">
+        <p class="eyebrow reveal">Портфолио</p>
+        <h2 class="section__title reveal">Избранные проекты</h2>
+      </div>
+      <div class="filters reveal" data-filters>
+        <button class="filter is-active" data-filter="all">Все</button>
+        <button class="filter" data-filter="living">Гостиные</button>
+        <button class="filter" data-filter="kitchen">Кухни</button>
+        <button class="filter" data-filter="bedroom">Спальни</button>
+        <button class="filter" data-filter="bath">Ванные комнаты</button>
+        <button class="filter" data-filter="commercial">Коммерческие</button>
+        <button class="filter" data-filter="full">Полные проекты</button>
+      </div>
+
+      <div class="gallery" data-gallery>
+        <!-- реальное изображение -->
+        <article class="card card--wide reveal" data-cat="living">
+          <div class="card__media">
+            <img src="images/hero-living.png" alt="Светлая гостиная — 3D-визуализация" loading="lazy" />
+          </div>
+          <div class="card__overlay">
+            <h3 class="card__title">Light Living</h3>
+            <p class="card__meta">Современная гостиная · Скандинавский минимализм</p>
+          </div>
+        </article>
+
+        <article class="card reveal" data-cat="bedroom" style="--ph:1">
+          <div class="card__media"><div class="ph"><span class="ph__tag">Спальня</span></div></div>
+          <div class="card__overlay"><h3 class="card__title">Loft Style Bedroom</h3><p class="card__meta">Спальня в стиле лофт</p></div>
+        </article>
+
+        <article class="card reveal" data-cat="kitchen" style="--ph:2">
+          <div class="card__media"><div class="ph"><span class="ph__tag">Кухня</span></div></div>
+          <div class="card__overlay"><h3 class="card__title">Dark Kitchen</h3><p class="card__meta">Кухня-гостиная с островом</p></div>
+        </article>
+
+        <article class="card reveal" data-cat="bath" style="--ph:3">
+          <div class="card__media"><div class="ph"><span class="ph__tag">Ванная</span></div></div>
+          <div class="card__overlay"><h3 class="card__title">Warm Stone Bath</h3><p class="card__meta">Ванная комната · Натуральный камень</p></div>
+        </article>
+
+        <article class="card reveal" data-cat="living" style="--ph:4">
+          <div class="card__media"><div class="ph"><span class="ph__tag">Гостиная</span></div></div>
+          <div class="card__overlay"><h3 class="card__title">Dark Living</h3><p class="card__meta">Современная гостиная</p></div>
+        </article>
+
+        <article class="card card--wide reveal" data-cat="commercial" style="--ph:5">
+          <div class="card__media"><div class="ph"><span class="ph__tag">Коммерция</span></div></div>
+          <div class="card__overlay"><h3 class="card__title">Boutique Café</h3><p class="card__meta">Коммерческий интерьер · Кофейня</p></div>
+        </article>
+
+        <article class="card reveal" data-cat="bedroom" style="--ph:6">
+          <div class="card__media"><div class="ph"><span class="ph__tag">Спальня</span></div></div>
+          <div class="card__overlay"><h3 class="card__title">Soft Neutrals</h3><p class="card__meta">Спальня в нейтральных тонах</p></div>
+        </article>
+
+        <article class="card reveal" data-cat="full" style="--ph:7">
+          <div class="card__media"><div class="ph"><span class="ph__tag">Полный проект</span></div></div>
+          <div class="card__overlay"><h3 class="card__title">City Apartment</h3><p class="card__meta">Полная визуализация квартиры</p></div>
+        </article>
+
+        <article class="card reveal" data-cat="kitchen" style="--ph:8">
+          <div class="card__media"><div class="ph"><span class="ph__tag">Кухня</span></div></div>
+          <div class="card__overlay"><h3 class="card__title">Marble Kitchen</h3><p class="card__meta">Кухня с мраморным островом</p></div>
+        </article>
+
+        <article class="card reveal" data-cat="full" style="--ph:9">
+          <div class="card__media"><div class="ph"><span class="ph__tag">Полный проект</span></div></div>
+          <div class="card__overlay"><h3 class="card__title">Country House</h3><p class="card__meta">Полная визуализация дома</p></div>
+        </article>
+      </div>
+      <p class="portfolio__note reveal">Слоты с подписями — плейсхолдеры под ваши рендеры. Замените изображения в папке <code>/images</code>.</p>
+    </div>
+  </section>
+
+  <!-- 4. УСЛУГИ -->
+  <section class="services section" id="services">
+    <div class="container">
+      <div class="section__head">
+        <p class="eyebrow reveal">Услуги</p>
+        <h2 class="section__title reveal">Что я делаю</h2>
+      </div>
+      <ul class="services__list">
+        <li class="service reveal"><span class="service__num">01</span><p>3D-визуализация интерьера</p></li>
+        <li class="service reveal"><span class="service__num">02</span><p>Визуализация по чертежам и техническому заданию</p></li>
+        <li class="service reveal"><span class="service__num">03</span><p>Подбор материалов, мебели и освещения</p></li>
+        <li class="service reveal"><span class="service__num">04</span><p>Создание нескольких ракурсов помещения</p></li>
+        <li class="service reveal"><span class="service__num">05</span><p>Внесение корректировок</p></li>
+        <li class="service reveal"><span class="service__num">06</span><p>Визуализация отдельных предметов мебели</p></li>
+        <li class="service reveal"><span class="service__num">07</span><p>Подготовка изображений для Behance, сайта и социальных сетей</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5. ПАКЕТЫ И СТОИМОСТЬ -->
+  <section class="pricing section" id="pricing">
+    <div class="container">
+      <div class="section__head">
+        <p class="eyebrow reveal">Пакеты и стоимость</p>
+        <h2 class="section__title reveal">Форматы работы</h2>
+      </div>
+      <!-- Переключатель периода (порт shadcn-компонента Pricing) -->
+      <div class="billing-toggle reveal" data-pricing>
+        <span class="billing-toggle__label" data-toggle-label="once">Разовый проект</span>
+        <button type="button" class="switch" role="switch" aria-checked="false" data-billing-switch aria-label="Переключить формат оплаты">
+          <span class="switch__thumb"></span>
+        </button>
+        <span class="billing-toggle__label billing-toggle__label--muted" data-toggle-label="annual">Годовое сотрудничество <span class="billing-toggle__save">−20%</span></span>
+      </div>
+
+      <div class="pricing-x">
+        <article class="price-card reveal" data-price="300" data-price-annual="240">
+          <p class="price-card__name">Базовый</p>
+          <div class="price-card__price">
+            <span class="price-card__amount" data-amount>$300</span>
+            <span class="price-card__period">/ проект</span>
+          </div>
+          <p class="price-card__billing" data-billing>разовая оплата</p>
+          <ul class="price-card__features">
+            <li>Визуализация одного помещения</li>
+            <li>До двух ракурсов</li>
+            <li>Работа по готовым чертежам и референсам</li>
+            <li>Базовая настройка материалов и освещения</li>
+            <li>Один этап корректировок</li>
+            <li>Готовые изображения в высоком разрешении</li>
+          </ul>
+          <hr class="price-card__divider" />
+          <a href="#contact" class="btn btn--ghost price-card__btn" data-scroll>Выбрать пакет</a>
+          <p class="price-card__desc">Для одного небольшого помещения</p>
+        </article>
+
+        <article class="price-card price-card--popular reveal" data-price="1000" data-price-annual="800">
+          <span class="price-card__badge">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Популярный
+          </span>
+          <p class="price-card__name">Стандарт</p>
+          <div class="price-card__price">
+            <span class="price-card__amount" data-amount>$1000</span>
+            <span class="price-card__period">/ проект</span>
+          </div>
+          <p class="price-card__billing" data-billing>разовая оплата</p>
+          <ul class="price-card__features">
+            <li>Визуализация до трёх помещений</li>
+            <li>Несколько ракурсов каждого помещения</li>
+            <li>Детальная проработка материалов, мебели и декора</li>
+            <li>Реалистичное дневное или вечернее освещение</li>
+            <li>Помощь с подбором визуального направления</li>
+            <li>До двух этапов корректировок</li>
+            <li>Изображения для презентации проекта и портфолио</li>
+          </ul>
+          <hr class="price-card__divider" />
+          <a href="#contact" class="btn btn--primary price-card__btn" data-scroll>Выбрать пакет</a>
+          <p class="price-card__desc">Комплексная визуализация нескольких помещений</p>
+        </article>
+
+        <article class="price-card reveal" data-price="2500" data-price-annual="2000">
+          <p class="price-card__name">Premium</p>
+          <div class="price-card__price">
+            <span class="price-card__amount" data-amount>$2500</span>
+            <span class="price-card__period">/ проект</span>
+          </div>
+          <p class="price-card__billing" data-billing>разовая оплата</p>
+          <ul class="price-card__features">
+            <li>Комплексная визуализация всего объекта</li>
+            <li>Разработка единого визуального стиля</li>
+            <li>Большое количество интерьерных ракурсов</li>
+            <li>Детальная проработка мебели, материалов, декора и освещения</li>
+            <li>Дневные и вечерние варианты визуализации</li>
+            <li>Отдельные декоративные сцены и крупные планы</li>
+            <li>Приоритетная работа над проектом</li>
+            <li>До трёх этапов корректировок</li>
+            <li>Изображения для сайта, рекламы, Behance и печати</li>
+          </ul>
+          <hr class="price-card__divider" />
+          <a href="#contact" class="btn btn--ghost price-card__btn" data-scroll>Выбрать пакет</a>
+          <p class="price-card__desc">Полная визуализация квартиры, дома или коммерческого пространства</p>
+        </article>
+      </div>
+      <p class="pricing__note reveal">При годовом сотрудничестве — цена за проект со скидкой 20%. Финальная стоимость рассчитывается индивидуально и зависит от площади, сложности проекта, количества помещений и ракурсов.</p>
+    </div>
+  </section>
+
+  <!-- 6. ЭТАПЫ РАБОТЫ -->
+  <section class="process section" id="process">
+    <div class="container">
+      <div class="section__head">
+        <p class="eyebrow reveal">Как я работаю</p>
+        <h2 class="section__title reveal">Этапы работы</h2>
+      </div>
+      <ol class="steps">
+        <li class="step reveal"><span class="step__num">01</span><h3>Обсуждение проекта</h3><p>Клиент отправляет планы, чертежи, фотографии, референсы и описание пожеланий.</p></li>
+        <li class="step reveal"><span class="step__num">02</span><h3>Подготовка сцены</h3><p>Создаётся геометрия помещения, расставляется мебель и настраиваются основные материалы.</p></li>
+        <li class="step reveal"><span class="step__num">03</span><h3>Предварительные изображения</h3><p>Клиент получает первые ракурсы и проверяет композицию, наполнение и основные решения.</p></li>
+        <li class="step reveal"><span class="step__num">04</span><h3>Материалы и освещение</h3><p>Прорабатываются текстуры, свет, декор и атмосфера пространства.</p></li>
+        <li class="step reveal"><span class="step__num">05</span><h3>Корректировки</h3><p>Вносятся согласованные изменения.</p></li>
+        <li class="step reveal"><span class="step__num">06</span><h3>Финальный результат</h3><p>Клиент получает готовые фотореалистичные изображения в высоком разрешении.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 7. ПРЕИМУЩЕСТВА -->
+  <section class="advantages section" id="advantages">
+    <div class="container">
+      <div class="section__head">
+        <p class="eyebrow reveal">Почему я</p>
+        <h2 class="section__title reveal">Преимущества</h2>
+      </div>
+      <div class="adv-grid">
+        <div class="adv reveal"><h3>Фотореалистичное качество</h3></div>
+        <div class="adv reveal"><h3>Внимание к деталям</h3></div>
+        <div class="adv reveal"><h3>Реалистичные материалы и освещение</h3></div>
+        <div class="adv reveal"><h3>Понятный процесс работы</h3></div>
+        <div class="adv reveal"><h3>Соблюдение сроков</h3></div>
+        <div class="adv reveal"><h3>Возможность внесения корректировок</h3></div>
+        <div class="adv reveal"><h3>Изображения, готовые для презентаций и публикаций</h3></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. ДЛЯ ДИЗАЙНЕРОВ И АРХИТЕКТОРОВ -->
+  <section class="collab section">
+    <div class="container">
+      <div class="collab__panel reveal" data-spotlight>
+        <div class="collab__inner">
+          <p class="eyebrow">Дизайнерам и архитекторам</p>
+          <h2 class="collab__title">Помогаю профессионально представить проект клиенту</h2>
+          <p class="collab__text">Качественная визуализация позволяет быстрее согласовать концепцию, материалы, мебель и цветовые решения.</p>
+          <a href="#contact" class="btn btn--primary" data-scroll>Предложить сотрудничество</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. ФОРМА ЗАЯВКИ -->
+  <section class="contact section" id="contact">
+    <div class="container contact__grid">
+      <div class="contact__intro">
+        <p class="eyebrow reveal">Заявка</p>
+        <h2 class="section__title reveal">Расскажите о вашем проекте</h2>
+        <p class="contact__lead reveal">Отправьте планы, референсы и краткое описание задачи — я изучу материалы и предложу подходящий формат работы.</p>
+      </div>
+
+      <form class="form reveal" data-form novalidate>
+        <div class="field">
+          <label for="name">Имя</label>
+          <input type="text" id="name" name="name" required />
+          <span class="field__error" data-error></span>
+        </div>
+        <div class="field">
+          <label for="contact-way">Email или мессенджер</label>
+          <input type="text" id="contact-way" name="contact" required />
+          <span class="field__error" data-error></span>
+        </div>
+        <div class="field">
+          <label for="room">Тип помещения</label>
+          <select id="room" name="room">
+            <option value="">Не выбрано</option>
+            <option>Гостиная</option>
+            <option>Кухня</option>
+            <option>Спальня</option>
+            <option>Ванная комната</option>
+            <option>Коммерческое пространство</option>
+            <option>Квартира / дом целиком</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="area">Площадь объекта</label>
+          <input type="text" id="area" name="area" placeholder="напр. 65 м²" />
+        </div>
+        <div class="field">
+          <label for="views">Количество ракурсов</label>
+          <input type="text" id="views" name="views" placeholder="напр. 4" />
+        </div>
+        <div class="field">
+          <label for="deadline">Желаемые сроки</label>
+          <input type="text" id="deadline" name="deadline" placeholder="напр. до 2 недель" />
+        </div>
+        <div class="field field--full">
+          <label for="desc">Описание проекта</label>
+          <textarea id="desc" name="desc" rows="4"></textarea>
+        </div>
+        <div class="field field--full">
+          <label for="files">Загрузка чертежей и референсов</label>
+          <input type="file" id="files" name="files" multiple />
+        </div>
+        <div class="field field--full">
+          <button type="submit" class="btn btn--primary form__submit">Обсудить проект</button>
+        </div>
+        <p class="form__success" data-success hidden>Спасибо! Ваша заявка получена — я свяжусь с вами в ближайшее время.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- 10. ФИНАЛЬНЫЙ БЛОК -->
+  <section class="cta section">
+    <div class="container">
+      <div class="cta__panel reveal" data-spotlight>
+        <div class="cta__inner">
+          <h2 class="cta__title">Готовы увидеть ваш<br />будущий интерьер?</h2>
+          <p class="cta__text">Давайте создадим визуализацию, которая передаст атмосферу пространства и поможет воплотить проект в жизнь.</p>
+          <a href="#contact" class="btn btn--primary btn--lg" data-scroll>Начать проект</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ПОДВАЛ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="footer__name">Kateryna Hnida</span>
+        <span class="footer__sub">3D-визуализация интерьеров · 3ds Max · Corona Renderer</span>
+      </div>
+      <nav class="footer__nav">
+        <a href="#portfolio" data-scroll>Проекты</a>
+        <a href="#services" data-scroll>Услуги</a>
+        <a href="#pricing" data-scroll>Цены</a>
+        <a href="#contact" data-scroll>Контакты</a>
+      </nav>
+      <div class="footer__socials">
+        <a href="#" aria-label="Behance">Behance</a>
+        <a href="#" aria-label="Instagram">Instagram</a>
+        <a href="#" aria-label="Email">Email</a>
+      </div>
+    </div>
+    <div class="container footer__copy">© <span data-year>2026</span> Kateryna Hnida. Все права защищены.</div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
