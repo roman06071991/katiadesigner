@@ -11,6 +11,22 @@
   var yearEl = document.querySelector('[data-year]');
   if (yearEl) { yearEl.textContent = new Date().getFullYear(); }
 
+  /* ---------- Фоновое видео hero ---------- */
+  var heroVideo = document.querySelector('[data-hero-video]');
+  if (heroVideo) {
+    if (reduceMotion) {
+      // Уважаем настройку «уменьшить движение» — оставляем статичный постер
+      heroVideo.removeAttribute('autoplay');
+      heroVideo.pause();
+    } else {
+      // Некоторые браузеры блокируют автозапуск — пробуем стартовать вручную
+      var playAttempt = heroVideo.play();
+      if (playAttempt && typeof playAttempt.catch === 'function') {
+        playAttempt.catch(function () {});
+      }
+    }
+  }
+
   /* ---------- Шапка: затемнение при скролле ---------- */
   var header = document.querySelector('[data-header]');
   function onScrollHeader() {

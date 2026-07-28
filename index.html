@@ -42,7 +42,11 @@
   <!-- 1. ПЕРВЫЙ ЭКРАН -->
   <section class="hero" id="hero">
     <div class="hero__bg" data-parallax>
-      <img src="images/hero-living.png" alt="Фотореалистичная 3D-визуализация светлой гостиной" />
+      <video class="hero__video" autoplay muted loop playsinline preload="auto"
+             poster="images/hero-living.png" data-hero-video>
+        <source src="video/hero.mp4" type="video/mp4" />
+        <img src="images/hero-living.png" alt="Фотореалистичная 3D-визуализация светлой гостиной" />
+      </video>
     </div>
     <div class="hero__overlay"></div>
     <div class="container hero__content">
