@@ -627,3 +627,44 @@ body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: none; }
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* ============================================================
+   ГАЛЕРЕЯ ПРОЕКТА (лайтбокс)
+   ============================================================ */
+.card--live { cursor: pointer; }
+.card--live .card__overlay { opacity: 1; transform: none; background: linear-gradient(0deg, rgba(10,10,11,0.85) 0%, rgba(10,10,11,0) 62%); }
+.card--live:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.lightbox {
+  position: fixed; inset: 0; z-index: 9990; display: none;
+  align-items: center; justify-content: center;
+  padding: clamp(16px, 4vw, 48px);
+  background: rgba(8,8,9,0.93);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.lightbox.is-open { display: flex; }
+body.lightbox-open { overflow: hidden; }
+
+.lightbox__stage { margin: 0; max-width: min(1400px, 100%); max-height: 100%; display: flex; flex-direction: column; gap: 14px; align-items: center; }
+.lightbox__img { max-width: 100%; max-height: 82vh; object-fit: contain; border-radius: 4px; box-shadow: 0 30px 90px rgba(0,0,0,0.55); background: var(--panel); }
+.lightbox__bar { display: flex; align-items: center; gap: 18px; color: var(--text-soft); font-size: 0.8rem; letter-spacing: 0.08em; }
+.lightbox__title { color: var(--text); letter-spacing: 0.16em; text-transform: uppercase; }
+.lightbox__counter { font-variant-numeric: tabular-nums; }
+
+.lightbox__close,
+.lightbox__nav {
+  position: absolute; background: rgba(20,20,22,0.5); border: 1px solid var(--line);
+  color: var(--text); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  line-height: 1; transition: border-color .25s var(--ease), color .25s var(--ease), background .25s var(--ease);
+}
+.lightbox__close:hover,
+.lightbox__nav:hover { border-color: var(--accent); color: var(--accent); background: rgba(20,20,22,0.8); }
+.lightbox__close { top: 20px; right: 24px; width: 46px; height: 46px; font-size: 1.9rem; }
+.lightbox__nav { top: 50%; transform: translateY(-50%); width: 56px; height: 56px; font-size: 2.2rem; padding-bottom: 4px; }
+.lightbox__nav--prev { left: clamp(12px, 3vw, 40px); }
+.lightbox__nav--next { right: clamp(12px, 3vw, 40px); }
+
+@media (max-width: 640px) {
+  .lightbox__nav { width: 44px; height: 44px; font-size: 1.7rem; }
+  .lightbox__img { max-height: 68vh; }
+}

@@ -90,9 +90,15 @@
       </div>
 
       <div class="gallery" data-gallery>
-        <article class="card reveal" style="--ph:1">
-          <div class="card__media"><div class="ph"><span class="ph__tag">Проект 1</span></div></div>
-          <div class="card__overlay"><h3 class="card__title">Проект 1</h3></div>
+        <article class="card card--live reveal" data-project-gallery
+          data-title="Проект 1"
+          data-images="images/projects/p1/01.jpg|images/projects/p1/02.jpg|images/projects/p1/03.jpg|images/projects/p1/04.jpg|images/projects/p1/05.jpg|images/projects/p1/06.jpg|images/projects/p1/07.jpg|images/projects/p1/08.jpg|images/projects/p1/09.jpg|images/projects/p1/10.jpg|images/projects/p1/11.jpg|images/projects/p1/12.jpg|images/projects/p1/13.jpg"
+          tabindex="0" role="button" aria-label="Проект 1 — открыть галерею, 13 фото">
+          <div class="card__media"><img src="images/projects/p1/01.jpg" alt="Проект 1 — 3D-визуализация интерьера" loading="lazy" /></div>
+          <div class="card__overlay">
+            <h3 class="card__title">Проект 1</h3>
+            <p class="card__meta">Галерея · 13 фото</p>
+          </div>
         </article>
 
         <article class="card reveal" style="--ph:2">
@@ -376,6 +382,20 @@
     </div>
     <div class="container footer__copy">© <span data-year>2026</span> Kateryna Hnida. Все права защищены.</div>
   </footer>
+
+  <!-- ЛАЙТБОКС ГАЛЕРЕИ ПРОЕКТА -->
+  <div class="lightbox" data-lightbox aria-hidden="true" role="dialog" aria-modal="true" aria-label="Галерея проекта">
+    <button class="lightbox__close" data-lb-close type="button" aria-label="Закрыть галерею">&times;</button>
+    <button class="lightbox__nav lightbox__nav--prev" data-lb-prev type="button" aria-label="Предыдущее фото">&#8249;</button>
+    <figure class="lightbox__stage">
+      <img class="lightbox__img" data-lb-img alt="" />
+      <figcaption class="lightbox__bar">
+        <span class="lightbox__title" data-lb-title></span>
+        <span class="lightbox__counter" data-lb-counter></span>
+      </figcaption>
+    </figure>
+    <button class="lightbox__nav lightbox__nav--next" data-lb-next type="button" aria-label="Следующее фото">&#8250;</button>
+  </div>
 
   <script src="js/main.js"></script>
 </body>

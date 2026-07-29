@@ -316,4 +316,86 @@
     })();
   }
 
+  /* ---------- Лайтбокс галереи проекта ---------- */
+  var lb = document.querySelector('[data-lightbox]');
+  if (lb) {
+    var lbImg = lb.querySelector('[data-lb-img]');
+    var lbTitle = lb.querySelector('[data-lb-title]');
+    var lbCounter = lb.querySelector('[data-lb-counter]');
+    var lbImages = [];
+    var lbIndex = 0;
+    var lastFocused = null;
+
+    function lbRender() {
+      var src = lbImages[lbIndex];
+      if (!src) { return; }
+      lbImg.src = src;
+      lbImg.alt = (lb.getAttribute('data-current-title') || 'Проект') + ' — фото ' + (lbIndex + 1);
+      lbCounter.textContent = (lbIndex + 1) + ' / ' + lbImages.length;
+      // предзагрузка соседних кадров
+      [lbIndex + 1, lbIndex - 1].forEach(function (i) {
+        var n = (i + lbImages.length) % lbImages.length;
+        var pre = new Image(); pre.src = lbImages[n];
+      });
+    }
+    function lbGo(step) {
+      lbIndex = (lbIndex + step + lbImages.length) % lbImages.length;
+      lbRender();
+    }
+    function lbOpen(images, title, startIndex) {
+      lbImages = images;
+      lbIndex = startIndex || 0;
+      lb.setAttribute('data-current-title', title || '');
+      lbTitle.textContent = title || '';
+      lastFocused = document.activeElement;
+      lbRender();
+      lb.classList.add('is-open');
+      lb.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('lightbox-open');
+      var closeBtn = lb.querySelector('[data-lb-close]');
+      if (closeBtn) { closeBtn.focus(); }
+    }
+    function lbClose() {
+      lb.classList.remove('is-open');
+      lb.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('lightbox-open');
+      lbImg.src = '';
+      if (lastFocused && typeof lastFocused.focus === 'function') { lastFocused.focus(); }
+    }
+
+    // Открытие по клику/клавише на карточке проекта
+    var galleryCards = document.querySelectorAll('[data-project-gallery]');
+    galleryCards.forEach(function (card) {
+      var imgs = (card.getAttribute('data-images') || '').split('|').filter(Boolean);
+      var title = card.getAttribute('data-title') || '';
+      if (!imgs.length) { return; }
+      card.addEventListener('click', function () { lbOpen(imgs, title, 0); });
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); lbOpen(imgs, title, 0); }
+      });
+    });
+
+    // Управление лайтбоксом
+    lb.querySelector('[data-lb-close]').addEventListener('click', lbClose);
+    lb.querySelector('[data-lb-prev]').addEventListener('click', function () { lbGo(-1); });
+    lb.querySelector('[data-lb-next]').addEventListener('click', function () { lbGo(1); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) { lbClose(); } });
+    document.addEventListener('keydown', function (e) {
+      if (!lb.classList.contains('is-open')) { return; }
+      if (e.key === 'Escape') { lbClose(); }
+      else if (e.key === 'ArrowRight') { lbGo(1); }
+      else if (e.key === 'ArrowLeft') { lbGo(-1); }
+    });
+
+    // Свайпы на мобильных
+    var touchX = null;
+    lb.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', function (e) {
+      if (touchX === null) { return; }
+      var dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 45) { lbGo(dx < 0 ? 1 : -1); }
+      touchX = null;
+    }, { passive: true });
+  }
+
 })();
