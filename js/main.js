@@ -347,10 +347,12 @@
       slideNext.src = lbImages[mod(lbIndex + 1)];
       lbCounter.textContent = (lbIndex + 1) + ' / ' + lbImages.length;
       setTrack(-lbViewport.clientWidth, false);
+      resetZoom();
     }
     // Долистывание с анимацией: dir=1 вперёд, dir=-1 назад
     function lbGo(dir) {
       if (lbAnimating || lbImages.length < 2) { return; }
+      if (zScale > 1.01) { resetZoom(); }
       var vw = lbViewport.clientWidth;
       lbAnimating = true;
       setTrack(dir > 0 ? -2 * vw : 0, true);
@@ -454,47 +456,140 @@
       }
     });
 
-    // Перелистывание пальцем/мышью, как в галерее телефона
+    /* ---------- Зум фото (пинч / колесо / двойной тап / кнопки) ---------- */
+    var zScale = 1, zX = 0, zY = 0;
+    function applyImg(animate) {
+      slideCur.style.transition = animate ? 'transform .28s cubic-bezier(.22,.61,.36,1)' : 'none';
+      slideCur.style.transform = 'translate(' + zX + 'px,' + zY + 'px) scale(' + zScale + ')';
+    }
+    function clampZoom() {
+      var mx = Math.max(0, (slideCur.offsetWidth * (zScale - 1)) / 2 + 30);
+      var my = Math.max(0, (slideCur.offsetHeight * (zScale - 1)) / 2 + 30);
+      zX = Math.max(-mx, Math.min(mx, zX));
+      zY = Math.max(-my, Math.min(my, zY));
+    }
+    function zoomTo(scale, fx, fy, animate) {
+      scale = Math.max(1, Math.min(4, scale));
+      var k = scale / zScale;
+      if (fx != null) { zX = fx - (fx - zX) * k; zY = fy - (fy - zY) * k; }
+      zScale = scale;
+      if (zScale <= 1.01) { zScale = 1; zX = 0; zY = 0; }
+      clampZoom();
+      applyImg(animate !== false);
+      lb.classList.toggle('is-zoomed', zScale > 1.01);
+    }
+    function resetZoom() { zScale = 1; zX = 0; zY = 0; applyImg(false); lb.classList.remove('is-zoomed'); }
+    function focal(cx, cy) {
+      var r = lbViewport.getBoundingClientRect();
+      return { x: cx - (r.left + r.width / 2), y: cy - (r.top + r.height / 2) };
+    }
+
+    lbViewport.addEventListener('wheel', function (e) {
+      e.preventDefault();
+      var f = focal(e.clientX, e.clientY);
+      zoomTo(zScale * (e.deltaY < 0 ? 1.15 : 1 / 1.15), f.x, f.y, false);
+    }, { passive: false });
+    lbViewport.addEventListener('dblclick', function (e) {
+      var f = focal(e.clientX, e.clientY);
+      if (zScale > 1.01) { zoomTo(1, 0, 0, true); } else { zoomTo(2.5, f.x, f.y, true); }
+    });
+    var zin = lb.querySelector('[data-lb-zoomin]'), zout = lb.querySelector('[data-lb-zoomout]');
+    if (zin) { zin.addEventListener('click', function () { zoomTo(zScale * 1.4, 0, 0, true); }); }
+    if (zout) { zout.addEventListener('click', function () { zoomTo(zScale / 1.4, 0, 0, true); }); }
+
+    /* ---------- Указатели: пинч, панорамирование, свайп ---------- */
+    var pointers = {}, pointerCount = 0;
+    var pinchDist0 = 0, pinchScale0 = 1;
+    var panning = false, panStartX = 0, panStartY = 0, panBaseX = 0, panBaseY = 0;
+    var lastTapT = 0, lastTapX = 0, lastTapY = 0;
     var dragActive = false, dragStartX = 0, dragStartY = 0, dragDX = 0, dragLock = null, dragVW = 0;
+
+    function twoDist() { var k = Object.keys(pointers), a = pointers[k[0]], b = pointers[k[1]]; return Math.hypot(a.x - b.x, a.y - b.y); }
+    function twoMid() { var k = Object.keys(pointers), a = pointers[k[0]], b = pointers[k[1]]; return focal((a.x + b.x) / 2, (a.y + b.y) / 2); }
+
     function onDown(e) {
-      if (lbAnimating) { return; }
-      dragActive = true; dragLock = null; dragDX = 0;
-      dragVW = lbViewport.clientWidth;
-      dragStartX = e.clientX; dragStartY = e.clientY;
-      lbViewport.classList.add('is-dragging');
-      lbTrack.classList.remove('is-animating');
-      if (lbViewport.setPointerCapture && e.pointerId != null) {
-        try { lbViewport.setPointerCapture(e.pointerId); } catch (err) {}
+      var id = e.pointerId != null ? e.pointerId : 'm';
+      pointers[id] = { x: e.clientX, y: e.clientY }; pointerCount++;
+      if (lbViewport.setPointerCapture && e.pointerId != null) { try { lbViewport.setPointerCapture(e.pointerId); } catch (err) {} }
+
+      if (pointerCount === 2) { dragActive = false; panning = false; pinchDist0 = twoDist(); pinchScale0 = zScale; return; }
+      if (pointerCount > 2) { return; }
+
+      // двойной тап (для касаний — колёсико/мышь используют dblclick)
+      var now = Date.now();
+      if (e.pointerType !== 'mouse' && now - lastTapT < 300 && Math.abs(e.clientX - lastTapX) < 30 && Math.abs(e.clientY - lastTapY) < 30) {
+        var f = focal(e.clientX, e.clientY);
+        if (zScale > 1.01) { zoomTo(1, 0, 0, true); } else { zoomTo(2.5, f.x, f.y, true); }
+        lastTapT = 0; return;
+      }
+      lastTapT = now; lastTapX = e.clientX; lastTapY = e.clientY;
+
+      if (zScale > 1.01) {                        // панорамируем увеличенное фото
+        panning = true; panStartX = e.clientX; panStartY = e.clientY; panBaseX = zX; panBaseY = zY;
+        lbViewport.classList.add('is-dragging'); slideCur.style.transition = 'none';
+      } else if (!lbAnimating) {                  // свайп между фото
+        dragActive = true; dragLock = null; dragDX = 0; dragVW = lbViewport.clientWidth;
+        dragStartX = e.clientX; dragStartY = e.clientY;
+        lbViewport.classList.add('is-dragging'); lbTrack.classList.remove('is-animating');
       }
     }
     function onMove(e) {
-      if (!dragActive) { return; }
-      var dx = e.clientX - dragStartX, dy = e.clientY - dragStartY;
-      if (dragLock === null) {
-        if (Math.abs(dx) < 6 && Math.abs(dy) < 6) { return; }
-        dragLock = Math.abs(dx) >= Math.abs(dy) ? 'x' : 'y';
+      var id = e.pointerId != null ? e.pointerId : 'm';
+      if (pointers[id]) { pointers[id].x = e.clientX; pointers[id].y = e.clientY; }
+
+      if (pointerCount >= 2) {                     // пинч-зум
+        if (e.cancelable) { e.preventDefault(); }
+        if (pinchDist0 > 0) { var m = twoMid(); zoomTo(pinchScale0 * twoDist() / pinchDist0, m.x, m.y, false); }
+        return;
       }
-      if (dragLock !== 'x') { return; }
-      if (e.cancelable) { e.preventDefault(); }
-      dragDX = (lbImages.length < 2) ? dx * 0.3 : dx;   // одиночное фото — упругий отклик
-      setTrack(-dragVW + dragDX, false);
+      if (panning) {
+        if (e.cancelable) { e.preventDefault(); }
+        zX = panBaseX + (e.clientX - panStartX); zY = panBaseY + (e.clientY - panStartY);
+        clampZoom(); applyImg(false); return;
+      }
+      if (dragActive) {
+        var dx = e.clientX - dragStartX, dy = e.clientY - dragStartY;
+        if (dragLock === null) {
+          if (Math.abs(dx) < 6 && Math.abs(dy) < 6) { return; }
+          dragLock = Math.abs(dx) >= Math.abs(dy) ? 'x' : 'y';
+        }
+        if (dragLock !== 'x') { return; }
+        if (e.cancelable) { e.preventDefault(); }
+        dragDX = (lbImages.length < 2) ? dx * 0.3 : dx;
+        setTrack(-dragVW + dragDX, false);
+      }
     }
-    function onUp() {
-      if (!dragActive) { return; }
-      dragActive = false;
-      lbViewport.classList.remove('is-dragging');
-      var moved = Math.abs(dragDX);
-      var threshold = Math.min(dragVW * 0.18, 90);
-      if (dragLock === 'x' && moved > threshold && lbImages.length > 1) {
-        lbGo(dragDX < 0 ? 1 : -1);
-      } else if (dragLock === 'x') {
-        lbAnimating = true;                 // не долистнули — возвращаем кадр на место
-        setTrack(-dragVW, true);
-        window.setTimeout(function () { lbAnimating = false; }, 330);
-      } else if (dragLock === null && moved < 6) {
-        lbClose();                          // тап без движения — закрыть
+    function onUp(e) {
+      var id = e && e.pointerId != null ? e.pointerId : 'm';
+      if (pointers[id]) { delete pointers[id]; pointerCount = Math.max(0, pointerCount - 1); }
+
+      if (pointerCount >= 1) {                     // пальцев ещё хватает — переходим к панорамированию
+        pinchDist0 = 0;
+        if (pointerCount === 1 && zScale > 1.01) {
+          var rid = Object.keys(pointers)[0], pp = pointers[rid];
+          panning = true; panStartX = pp.x; panStartY = pp.y; panBaseX = zX; panBaseY = zY;
+        }
+        return;
       }
-      dragDX = 0; dragLock = null;
+
+      lbViewport.classList.remove('is-dragging');
+      if (panning) { panning = false; return; }
+
+      if (dragActive) {
+        dragActive = false;
+        var moved = Math.abs(dragDX), threshold = Math.min(dragVW * 0.18, 90);
+        if (dragLock === 'x' && moved > threshold && lbImages.length > 1) {
+          lbGo(dragDX < 0 ? 1 : -1);
+        } else if (dragLock === 'x') {
+          lbAnimating = true; setTrack(-dragVW, true);
+          window.setTimeout(function () { lbAnimating = false; }, 330);
+        } else if (dragLock === null && moved < 6 && zScale <= 1.01) {
+          // тап по тёмному полю (вне фото) — закрыть
+          var ir = slideCur.getBoundingClientRect();
+          if (dragStartX < ir.left || dragStartX > ir.right || dragStartY < ir.top || dragStartY > ir.bottom) { lbClose(); }
+        }
+        dragDX = 0; dragLock = null;
+      }
     }
     if (window.PointerEvent) {
       lbViewport.addEventListener('pointerdown', onDown);
@@ -502,15 +597,16 @@
       lbViewport.addEventListener('pointerup', onUp);
       lbViewport.addEventListener('pointercancel', onUp);
     } else {
-      lbViewport.addEventListener('touchstart', function (e) { onDown(e.changedTouches[0]); }, { passive: true });
-      lbViewport.addEventListener('touchmove', function (e) { onMove(e.changedTouches[0]); if (dragLock === 'x' && e.cancelable) { e.preventDefault(); } }, { passive: false });
-      lbViewport.addEventListener('touchend', function () { onUp(); });
+      lbViewport.addEventListener('touchstart', function (e) { var t = e.changedTouches; for (var i = 0; i < t.length; i++) { onDown({ clientX: t[i].clientX, clientY: t[i].clientY, pointerId: t[i].identifier }); } }, { passive: true });
+      lbViewport.addEventListener('touchmove', function (e) { var t = e.changedTouches; for (var i = 0; i < t.length; i++) { onMove({ clientX: t[i].clientX, clientY: t[i].clientY, pointerId: t[i].identifier, cancelable: e.cancelable, preventDefault: function () { if (e.cancelable) { e.preventDefault(); } } }); } }, { passive: false });
+      lbViewport.addEventListener('touchend', function (e) { var t = e.changedTouches; for (var i = 0; i < t.length; i++) { onUp({ pointerId: t[i].identifier }); } });
     }
 
     // Пересчёт позиции при изменении размеров окна
     window.addEventListener('resize', function () {
-      if (lb.classList.contains('is-open') && !dragActive && !lbAnimating) {
-        setTrack(-lbViewport.clientWidth, false);
+      if (lb.classList.contains('is-open') && !dragActive && !panning && pointerCount === 0) {
+        if (zScale > 1.01) { clampZoom(); applyImg(false); }
+        else if (!lbAnimating) { setTrack(-lbViewport.clientWidth, false); }
       }
     });
   }
