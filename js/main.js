@@ -347,7 +347,6 @@
       lbIndex = startIndex || 0;
       lb.setAttribute('data-current-title', title || '');
       lbTitle.textContent = title || '';
-      lastFocused = document.activeElement;
       lbRender();
       lb.classList.add('is-open');
       lb.setAttribute('aria-hidden', 'false');
@@ -358,20 +357,68 @@
     function lbClose() {
       lb.classList.remove('is-open');
       lb.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('lightbox-open');
       lbImg.src = '';
-      if (lastFocused && typeof lastFocused.focus === 'function') { lastFocused.focus(); }
+      // Если открыта сетка миниатюр — возвращаемся к ней, иначе полностью закрываем
+      if (gm && gm.classList.contains('is-open')) {
+        var gmc = gm.querySelector('[data-gm-close]');
+        if (gmc) { gmc.focus(); }
+      } else {
+        document.body.classList.remove('lightbox-open');
+        if (lastFocused && typeof lastFocused.focus === 'function') { lastFocused.focus(); }
+      }
     }
 
-    // Открытие по клику/клавише на карточке проекта
+    /* ---------- Сетка миниатюр проекта ---------- */
+    var gm = document.querySelector('[data-gallery-modal]');
+    var gmGrid = gm ? gm.querySelector('[data-gm-grid]') : null;
+    var gmTitle = gm ? gm.querySelector('[data-gm-title]') : null;
+    var gmCount = gm ? gm.querySelector('[data-gm-count]') : null;
+
+    function openGrid(images, title) {
+      if (!gm) { lbOpen(images, title, 0); return; }
+      lastFocused = document.activeElement;
+      gmTitle.textContent = title || '';
+      gmCount.textContent = images.length + ' фото';
+      gmGrid.innerHTML = '';
+      gmGrid.scrollTop = 0;
+      images.forEach(function (src, i) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'gm-thumb';
+        btn.setAttribute('aria-label', (title || 'Проект') + ' — фото ' + (i + 1));
+        var im = document.createElement('img');
+        im.src = src; im.loading = 'lazy'; im.alt = '';
+        btn.appendChild(im);
+        btn.addEventListener('click', function () { lbOpen(images, title, i); });
+        gmGrid.appendChild(btn);
+      });
+      gm.classList.add('is-open');
+      gm.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('lightbox-open');
+      var gmc = gm.querySelector('[data-gm-close]');
+      if (gmc) { gmc.focus(); }
+    }
+    function gridClose() {
+      if (!gm) { return; }
+      gm.classList.remove('is-open');
+      gm.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('lightbox-open');
+      if (lastFocused && typeof lastFocused.focus === 'function') { lastFocused.focus(); }
+    }
+    if (gm) {
+      gm.querySelector('[data-gm-close]').addEventListener('click', gridClose);
+      gm.addEventListener('click', function (e) { if (e.target === gm) { gridClose(); } });
+    }
+
+    // Открытие сетки миниатюр по клику/клавише на карточке проекта
     var galleryCards = document.querySelectorAll('[data-project-gallery]');
     galleryCards.forEach(function (card) {
       var imgs = (card.getAttribute('data-images') || '').split('|').filter(Boolean);
       var title = card.getAttribute('data-title') || '';
       if (!imgs.length) { return; }
-      card.addEventListener('click', function () { lbOpen(imgs, title, 0); });
+      card.addEventListener('click', function () { openGrid(imgs, title); });
       card.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); lbOpen(imgs, title, 0); }
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openGrid(imgs, title); }
       });
     });
 
@@ -380,14 +427,18 @@
     lb.querySelector('[data-lb-prev]').addEventListener('click', function () { lbGo(-1); });
     lb.querySelector('[data-lb-next]').addEventListener('click', function () { lbGo(1); });
     lb.addEventListener('click', function (e) { if (e.target === lb) { lbClose(); } });
+
     document.addEventListener('keydown', function (e) {
-      if (!lb.classList.contains('is-open')) { return; }
-      if (e.key === 'Escape') { lbClose(); }
-      else if (e.key === 'ArrowRight') { lbGo(1); }
-      else if (e.key === 'ArrowLeft') { lbGo(-1); }
+      if (lb.classList.contains('is-open')) {
+        if (e.key === 'Escape') { lbClose(); }
+        else if (e.key === 'ArrowRight') { lbGo(1); }
+        else if (e.key === 'ArrowLeft') { lbGo(-1); }
+      } else if (gm && gm.classList.contains('is-open')) {
+        if (e.key === 'Escape') { gridClose(); }
+      }
     });
 
-    // Свайпы на мобильных
+    // Свайпы на мобильных (в большом фото)
     var touchX = null;
     lb.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
     lb.addEventListener('touchend', function (e) {

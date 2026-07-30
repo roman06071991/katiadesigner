@@ -415,8 +415,20 @@
     <div class="container footer__copy">© <span data-year>2026</span> Kateryna Hnida. Все права защищены.</div>
   </footer>
 
+  <!-- СЕТКА МИНИАТЮР ПРОЕКТА -->
+  <div class="gallery-modal" data-gallery-modal aria-hidden="true" role="dialog" aria-modal="true" aria-label="Галерея проекта">
+    <div class="gallery-modal__bar container">
+      <div class="gallery-modal__meta">
+        <span class="gallery-modal__title" data-gm-title></span>
+        <span class="gallery-modal__count" data-gm-count></span>
+      </div>
+      <button class="gallery-modal__close" data-gm-close type="button" aria-label="Закрыть галерею">&times;</button>
+    </div>
+    <div class="gallery-modal__grid container" data-gm-grid></div>
+  </div>
+
   <!-- ЛАЙТБОКС ГАЛЕРЕИ ПРОЕКТА -->
-  <div class="lightbox" data-lightbox aria-hidden="true" role="dialog" aria-modal="true" aria-label="Галерея проекта">
+  <div class="lightbox" data-lightbox aria-hidden="true" role="dialog" aria-modal="true" aria-label="Просмотр фото">
     <button class="lightbox__close" data-lb-close type="button" aria-label="Закрыть галерею">&times;</button>
     <button class="lightbox__nav lightbox__nav--prev" data-lb-prev type="button" aria-label="Предыдущее фото">&#8249;</button>
     <figure class="lightbox__stage">
