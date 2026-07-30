@@ -431,14 +431,18 @@
   <div class="lightbox" data-lightbox aria-hidden="true" role="dialog" aria-modal="true" aria-label="Просмотр фото">
     <button class="lightbox__close" data-lb-close type="button" aria-label="Закрыть галерею">&times;</button>
     <button class="lightbox__nav lightbox__nav--prev" data-lb-prev type="button" aria-label="Предыдущее фото">&#8249;</button>
-    <figure class="lightbox__stage">
-      <img class="lightbox__img" data-lb-img alt="" />
-      <figcaption class="lightbox__bar">
-        <span class="lightbox__title" data-lb-title></span>
-        <span class="lightbox__counter" data-lb-counter></span>
-      </figcaption>
-    </figure>
+    <div class="lightbox__viewport" data-lb-viewport>
+      <div class="lightbox__track" data-lb-track>
+        <div class="lightbox__slide"><img data-lb-slide="prev" alt="" draggable="false" /></div>
+        <div class="lightbox__slide"><img data-lb-slide="cur" alt="" draggable="false" /></div>
+        <div class="lightbox__slide"><img data-lb-slide="next" alt="" draggable="false" /></div>
+      </div>
+    </div>
     <button class="lightbox__nav lightbox__nav--next" data-lb-next type="button" aria-label="Следующее фото">&#8250;</button>
+    <div class="lightbox__bar">
+      <span class="lightbox__title" data-lb-title></span>
+      <span class="lightbox__counter" data-lb-counter></span>
+    </div>
   </div>
 
   <script src="js/main.js"></script>
