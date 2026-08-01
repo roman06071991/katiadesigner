@@ -7,6 +7,10 @@
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
+  /* ---------- Перевод (берётся из i18n.js, с запасным русским) ---------- */
+  function tr(key, fallback) { return (window.I18N && window.I18N.t && window.I18N.t(key)) || fallback; }
+  function photosW(n) { return (window.I18N && window.I18N.photosWord) ? window.I18N.photosWord(n) : 'фото'; }
+
   /* ---------- Текущий год в подвале ---------- */
   var yearEl = document.querySelector('[data-year]');
   if (yearEl) { yearEl.textContent = new Date().getFullYear(); }
@@ -127,7 +131,7 @@
       var errEl = wrap ? wrap.querySelector('[data-error]') : null;
       var valid = field.value.trim().length > 0;
       if (wrap) { wrap.classList.toggle('has-error', !valid); }
-      if (errEl) { errEl.textContent = valid ? '' : 'Пожалуйста, заполните это поле'; }
+      if (errEl) { errEl.textContent = valid ? '' : tr('form_required', 'Пожалуйста, заполните это поле'); }
       return valid;
     }
 
@@ -240,8 +244,8 @@
         animateAmount(amountEl, from, isAnnual ? annual : once);
         if (billingEl) {
           billingEl.textContent = isAnnual
-            ? 'цена за проект при годовом сотрудничестве'
-            : 'разовая оплата';
+            ? tr('billing_annual', 'цена за проект при годовом сотрудничестве')
+            : tr('billing_once', 'разовая оплата');
         }
       });
     }
@@ -257,6 +261,8 @@
     pricingSwitch.addEventListener('keydown', function (e) {
       if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggleBilling(); }
     });
+    // При смене языка — обновить подписи к ценам в текущем режиме
+    document.addEventListener('i18n:changed', updatePrices);
   }
 
   /* ---------- Минималистичное конфетти (без зависимостей) ---------- */
@@ -340,9 +346,9 @@
     // слева и справа стоят соседние фото, готовые к перелистыванию.
     function lbRender() {
       if (!lbImages.length) { return; }
-      var t = lb.getAttribute('data-current-title') || 'Проект';
+      var t = lb.getAttribute('data-current-title') || tr('word_project', 'Проект');
       slideCur.src = lbImages[lbIndex];
-      slideCur.alt = t + ' — фото ' + (lbIndex + 1);
+      slideCur.alt = t + ' — ' + photosW(1) + ' ' + (lbIndex + 1);
       slidePrev.src = lbImages[mod(lbIndex - 1)];
       slideNext.src = lbImages[mod(lbIndex + 1)];
       lbCounter.textContent = (lbIndex + 1) + ' / ' + lbImages.length;
@@ -397,14 +403,14 @@
       if (!gm) { lbOpen(images, title, 0); return; }
       lastFocused = document.activeElement;
       gmTitle.textContent = title || '';
-      gmCount.textContent = images.length + ' фото';
+      gmCount.textContent = images.length + ' ' + photosW(images.length);
       gmGrid.innerHTML = '';
       gmGrid.scrollTop = 0;
       images.forEach(function (src, i) {
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'gm-thumb';
-        btn.setAttribute('aria-label', (title || 'Проект') + ' — фото ' + (i + 1));
+        btn.setAttribute('aria-label', (title || tr('word_project', 'Проект')) + ' — ' + photosW(1) + ' ' + (i + 1));
         var im = document.createElement('img');
         im.src = src; im.loading = 'lazy'; im.alt = '';
         btn.appendChild(im);
